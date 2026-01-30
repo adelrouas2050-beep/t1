@@ -148,9 +148,33 @@ const RiderDashboard = () => {
               <Button variant="ghost" size="sm" onClick={toggleLanguage}>
                 <Languages className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4" />
-              </Button>
+              
+              {/* Admin Menu or Regular Logout */}
+              {isAdmin ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2 border-amber-500 text-amber-600 hover:bg-amber-50">
+                      <Shield className="w-4 h-4" />
+                      <span className="hidden sm:inline">{t('المدير', 'Admin')}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem onClick={handleGoToAdmin} className="gap-2 cursor-pointer">
+                      <Settings className="w-4 h-4" />
+                      {t('لوحة التحكم', 'Admin Panel')}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="gap-2 cursor-pointer text-red-600">
+                      <LogOut className="w-4 h-4" />
+                      {t('تسجيل الخروج', 'Logout')}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              )}
             </div>
           </div>
         </div>
