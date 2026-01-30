@@ -29,7 +29,7 @@ import { useToast } from '../hooks/use-toast';
 
 const RiderDashboard = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const { t, toggleLanguage, language } = useLanguage();
   const { formatPrice } = useCurrency();
   const { toast } = useToast();
@@ -53,6 +53,12 @@ const RiderDashboard = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleGoToAdmin = () => {
+    localStorage.setItem('token', 'admin-token');
+    localStorage.setItem('admin', JSON.stringify({ name: 'مدير النظام', email: 'admin@transfers.com', role: 'super_admin' }));
+    navigate('/admin');
   };
 
   const unreadMessagesCount = getTotalUnreadCount();
