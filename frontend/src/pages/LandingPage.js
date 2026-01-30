@@ -232,9 +232,18 @@ const LandingPage = () => {
             <Car className="w-6 h-6" />
             <span className="text-xl font-bold">{t('ترانسفيرز', 'TransVerse')}</span>
           </div>
-          <p className="text-slate-400">
+          <p className="text-slate-400 mb-4">
             {t('© 2025 ترانسفيرز. جميع الحقوق محفوظة.', '© 2025 TransVerse. All rights reserved.')}
           </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate('/admin/login')}
+            className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white"
+          >
+            <Shield className="w-4 h-4 mr-2" />
+            {t('لوحة التحكم', 'Admin Panel')}
+          </Button>
         </div>
       </footer>
     </div>
