@@ -188,3 +188,17 @@ export const promoOffers = [
     validUntil: '2025-06-30'
   }
 ];
+export const currencies = [
+  { code: 'SAR', name: 'ريال سعودي', symbol: 'ر.س' },
+  { code: 'AED', name: 'درهم إماراتي', symbol: 'د.إ' },
+  { code: 'EGP', name: 'جنيه مصري', symbol: 'ج.م' },
+  { code: 'KWD', name: 'دينار كويتي', symbol: 'د.ك' },
+  { code: 'QAR', name: 'ريال قطري', symbol: 'ر.ق' },
+  { code: 'BHD', name: 'دينار بحريني', symbol: 'د.ب' },
+  { code: 'OMR', name: 'ريال عماني', symbol: 'ر.ع' },
+  { code: 'JOD', name: 'دينار أردني', symbol: 'د.أ' },
+  { code: 'LBP', name: 'ليرة لبنانية', symbol: 'ل.ل' },
+  { code: 'MAD', name: 'درهم مغربي', symbol: 'د.م' },
+  { code: 'TND', name: 'دينار تونسي', symbol: 'د.ت' },
+  { code: 'USD', name: 'دولار أمريكي', symbol: '$' },
+];
