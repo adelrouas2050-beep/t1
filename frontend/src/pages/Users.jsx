@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -26,7 +26,9 @@ import {
   Eye,
   Filter,
   Download,
-  Plus
+  Plus,
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 
 const statusColors = {
@@ -42,12 +44,28 @@ const statusLabels = {
 };
 
 export default function Users() {
-  const { users, updateUserStatus } = useAdmin();
+  const { users, fetchUsers, updateUserStatus } = useAdmin();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await fetchUsers();
+      setLoading(false);
+    };
+    loadData();
+  }, [fetchUsers]);
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    await fetchUsers();
+    setLoading(false);
+  };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.includes(search) || user.email.includes(search) || user.phone.includes(search);
+    const matchesSearch = user.name?.includes(search) || user.email?.includes(search) || user.phone?.includes(search);
     const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -60,10 +78,23 @@ export default function Users() {
           <h1 className="text-3xl font-bold text-white tracking-tight">المستخدمين</h1>
           <p className="text-zinc-500 mt-1">إدارة حسابات المستخدمين</p>
         </div>
-        <Button className="bg-indigo-500 hover:bg-indigo-600 text-white btn-glow" data-testid="add-user-btn">
-          <Plus className="w-4 h-4 ml-2" />
-          إضافة مستخدم
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={loading}
+            className="border-white/10 bg-white/5 hover:bg-white/10"
+            data-testid="refresh-users-btn"
+          >
+            <RefreshCw className={`w-4 h-4 ml-2 ${loading ? 'animate-spin' : ''}`} />
+            تحديث
+          </Button>
+          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white btn-glow" data-testid="add-user-btn">
+            <Plus className="w-4 h-4 ml-2" />
+            إضافة مستخدم
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -118,84 +149,94 @@ export default function Users() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="table-header text-right">المستخدم</TableHead>
-                <TableHead className="table-header text-right">الهاتف</TableHead>
-                <TableHead className="table-header text-right">الرحلات</TableHead>
-                <TableHead className="table-header text-right">الطلبات</TableHead>
-                <TableHead className="table-header text-right">تاريخ الانضمام</TableHead>
-                <TableHead className="table-header text-right">الحالة</TableHead>
-                <TableHead className="table-header text-right">إجراءات</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers.map((user) => (
-                <TableRow 
-                  key={user.id} 
-                  className="border-white/5 hover:bg-white/5 transition-colors"
-                  data-testid={`user-row-${user.id}`}
-                >
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <img 
-                        src={user.avatar} 
-                        alt={user.name}
-                        className="w-10 h-10 rounded-full object-cover border border-white/10"
-                      />
-                      <div>
-                        <p className="font-medium text-white">{user.name}</p>
-                        <p className="text-xs text-zinc-500">{user.email}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-zinc-300 font-mono text-sm">{user.phone}</TableCell>
-                  <TableCell className="text-zinc-300">{user.rides}</TableCell>
-                  <TableCell className="text-zinc-300">{user.orders}</TableCell>
-                  <TableCell className="text-zinc-500 text-sm">{user.joined}</TableCell>
-                  <TableCell>
-                    <Badge className={`${statusColors[user.status]} border`}>
-                      {statusLabels[user.status]}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5" data-testid={`user-actions-${user.id}`}>
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="bg-[#18181b] border-white/10">
-                        <DropdownMenuItem className="text-zinc-300 focus:bg-white/5 cursor-pointer">
-                          <Eye className="w-4 h-4 ml-2" />
-                          عرض التفاصيل
-                        </DropdownMenuItem>
-                        {user.status !== 'active' && (
-                          <DropdownMenuItem 
-                            onClick={() => updateUserStatus(user.id, 'active')}
-                            className="text-emerald-400 focus:bg-emerald-500/10 cursor-pointer"
-                          >
-                            <UserCheck className="w-4 h-4 ml-2" />
-                            تفعيل الحساب
-                          </DropdownMenuItem>
-                        )}
-                        {user.status !== 'blocked' && (
-                          <DropdownMenuItem 
-                            onClick={() => updateUserStatus(user.id, 'blocked')}
-                            className="text-red-400 focus:bg-red-500/10 cursor-pointer"
-                          >
-                            <UserX className="w-4 h-4 ml-2" />
-                            حظر المستخدم
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+            </div>
+          ) : filteredUsers.length === 0 ? (
+            <div className="text-center py-12 text-zinc-500">
+              لا يوجد مستخدمين. اضغط على "تحميل بيانات تجريبية" في لوحة التحكم.
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow className="border-white/10 hover:bg-transparent">
+                  <TableHead className="table-header text-right">المستخدم</TableHead>
+                  <TableHead className="table-header text-right">الهاتف</TableHead>
+                  <TableHead className="table-header text-right">الرحلات</TableHead>
+                  <TableHead className="table-header text-right">الطلبات</TableHead>
+                  <TableHead className="table-header text-right">تاريخ الانضمام</TableHead>
+                  <TableHead className="table-header text-right">الحالة</TableHead>
+                  <TableHead className="table-header text-right">إجراءات</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredUsers.map((user) => (
+                  <TableRow 
+                    key={user.id} 
+                    className="border-white/5 hover:bg-white/5 transition-colors"
+                    data-testid={`user-row-${user.id}`}
+                  >
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={user.avatar || 'https://via.placeholder.com/40'} 
+                          alt={user.name}
+                          className="w-10 h-10 rounded-full object-cover border border-white/10"
+                        />
+                        <div>
+                          <p className="font-medium text-white">{user.name}</p>
+                          <p className="text-xs text-zinc-500">{user.email}</p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-zinc-300 font-mono text-sm">{user.phone}</TableCell>
+                    <TableCell className="text-zinc-300">{user.rides}</TableCell>
+                    <TableCell className="text-zinc-300">{user.orders}</TableCell>
+                    <TableCell className="text-zinc-500 text-sm">{user.joined}</TableCell>
+                    <TableCell>
+                      <Badge className={`${statusColors[user.status]} border`}>
+                        {statusLabels[user.status]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5" data-testid={`user-actions-${user.id}`}>
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="bg-[#18181b] border-white/10">
+                          <DropdownMenuItem className="text-zinc-300 focus:bg-white/5 cursor-pointer">
+                            <Eye className="w-4 h-4 ml-2" />
+                            عرض التفاصيل
+                          </DropdownMenuItem>
+                          {user.status !== 'active' && (
+                            <DropdownMenuItem 
+                              onClick={() => updateUserStatus(user.id, 'active')}
+                              className="text-emerald-400 focus:bg-emerald-500/10 cursor-pointer"
+                            >
+                              <UserCheck className="w-4 h-4 ml-2" />
+                              تفعيل الحساب
+                            </DropdownMenuItem>
+                          )}
+                          {user.status !== 'blocked' && (
+                            <DropdownMenuItem 
+                              onClick={() => updateUserStatus(user.id, 'blocked')}
+                              className="text-red-400 focus:bg-red-500/10 cursor-pointer"
+                            >
+                              <UserX className="w-4 h-4 ml-2" />
+                              حظر المستخدم
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
