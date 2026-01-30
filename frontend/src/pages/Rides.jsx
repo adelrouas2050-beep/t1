@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -22,12 +22,12 @@ import {
   Search, 
   Filter,
   Download,
-  MapPin,
   Clock,
   CheckCircle,
   XCircle,
   Navigation,
-  Eye
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 
 const statusColors = {
@@ -52,17 +52,33 @@ const statusIcons = {
 };
 
 export default function Rides() {
-  const { rides } = useAdmin();
+  const { rides, fetchRides } = useAdmin();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await fetchRides();
+      setLoading(false);
+    };
+    loadData();
+  }, [fetchRides]);
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    await fetchRides();
+    setLoading(false);
+  };
 
   const filteredRides = rides.filter(ride => {
     const matchesSearch = 
-      ride.id.includes(search) || 
-      ride.user.includes(search) || 
-      ride.driver.includes(search) ||
-      ride.from.includes(search) ||
-      ride.to.includes(search);
+      ride.id?.includes(search) || 
+      ride.user?.includes(search) || 
+      ride.driver?.includes(search) ||
+      ride.from?.includes(search) ||
+      ride.to?.includes(search);
     const matchesStatus = statusFilter === 'all' || ride.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -82,10 +98,23 @@ export default function Rides() {
           <h1 className="text-3xl font-bold text-white tracking-tight">الرحلات</h1>
           <p className="text-zinc-500 mt-1">متابعة وإدارة جميع الرحلات</p>
         </div>
-        <Button variant="outline" className="border-white/10 bg-white/5 hover:bg-white/10" data-testid="export-rides">
-          <Download className="w-4 h-4 ml-2" />
-          تصدير التقرير
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={loading}
+            className="border-white/10 bg-white/5 hover:bg-white/10"
+            data-testid="refresh-rides-btn"
+          >
+            <RefreshCw className={`w-4 h-4 ml-2 ${loading ? 'animate-spin' : ''}`} />
+            تحديث
+          </Button>
+          <Button variant="outline" className="border-white/10 bg-white/5 hover:bg-white/10" data-testid="export-rides">
+            <Download className="w-4 h-4 ml-2" />
+            تصدير التقرير
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -167,59 +196,69 @@ export default function Rides() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="table-header text-right">رقم الرحلة</TableHead>
-                <TableHead className="table-header text-right">المستخدم</TableHead>
-                <TableHead className="table-header text-right">السائق</TableHead>
-                <TableHead className="table-header text-right">المسار</TableHead>
-                <TableHead className="table-header text-right">التاريخ</TableHead>
-                <TableHead className="table-header text-right">المدة</TableHead>
-                <TableHead className="table-header text-right">السعر</TableHead>
-                <TableHead className="table-header text-right">الحالة</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredRides.map((ride) => {
-                const StatusIcon = statusIcons[ride.status];
-                return (
-                  <TableRow 
-                    key={ride.id} 
-                    className="border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
-                    data-testid={`ride-row-${ride.id}`}
-                  >
-                    <TableCell className="font-mono text-indigo-400 font-medium">{ride.id}</TableCell>
-                    <TableCell className="text-white">{ride.user}</TableCell>
-                    <TableCell className="text-zinc-300">{ride.driver}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1 max-w-xs">
-                        <div className="flex items-center gap-2 text-xs">
-                          <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                          <span className="text-zinc-400 truncate">{ride.from}</span>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+            </div>
+          ) : filteredRides.length === 0 ? (
+            <div className="text-center py-12 text-zinc-500">
+              لا يوجد رحلات. اضغط على "تحميل بيانات تجريبية" في لوحة التحكم.
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow className="border-white/10 hover:bg-transparent">
+                  <TableHead className="table-header text-right">رقم الرحلة</TableHead>
+                  <TableHead className="table-header text-right">المستخدم</TableHead>
+                  <TableHead className="table-header text-right">السائق</TableHead>
+                  <TableHead className="table-header text-right">المسار</TableHead>
+                  <TableHead className="table-header text-right">التاريخ</TableHead>
+                  <TableHead className="table-header text-right">المدة</TableHead>
+                  <TableHead className="table-header text-right">السعر</TableHead>
+                  <TableHead className="table-header text-right">الحالة</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredRides.map((ride) => {
+                  const StatusIcon = statusIcons[ride.status] || Clock;
+                  return (
+                    <TableRow 
+                      key={ride.id} 
+                      className="border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+                      data-testid={`ride-row-${ride.id}`}
+                    >
+                      <TableCell className="font-mono text-indigo-400 font-medium">{ride.id}</TableCell>
+                      <TableCell className="text-white">{ride.user}</TableCell>
+                      <TableCell className="text-zinc-300">{ride.driver}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1 max-w-xs">
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                            <span className="text-zinc-400 truncate">{ride.from}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className="w-2 h-2 rounded-full bg-red-400"></div>
+                            <span className="text-zinc-400 truncate">{ride.to}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 text-xs">
-                          <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                          <span className="text-zinc-400 truncate">{ride.to}</span>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-zinc-500 text-sm">{ride.date}</TableCell>
-                    <TableCell className="text-zinc-300">{ride.duration}</TableCell>
-                    <TableCell className="text-emerald-400 font-medium">
-                      {ride.fare > 0 ? `${ride.fare} ر.س` : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={`${statusColors[ride.status]} border flex items-center gap-1 w-fit`}>
-                        <StatusIcon className="w-3 h-3" />
-                        {statusLabels[ride.status]}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                      </TableCell>
+                      <TableCell className="text-zinc-500 text-sm">{ride.date}</TableCell>
+                      <TableCell className="text-zinc-300">{ride.duration}</TableCell>
+                      <TableCell className="text-emerald-400 font-medium">
+                        {ride.fare > 0 ? `${ride.fare} ر.س` : '-'}
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={`${statusColors[ride.status]} border flex items-center gap-1 w-fit`}>
+                          <StatusIcon className="w-3 h-3" />
+                          {statusLabels[ride.status]}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
