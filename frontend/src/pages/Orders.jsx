@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -23,12 +23,12 @@ import {
   Filter,
   Download,
   ShoppingBag,
-  Clock,
   CheckCircle,
   XCircle,
   Truck,
   ChefHat,
-  Eye
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 
 const statusColors = {
@@ -53,15 +53,31 @@ const statusIcons = {
 };
 
 export default function Orders() {
-  const { orders } = useAdmin();
+  const { orders, fetchOrders } = useAdmin();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await fetchOrders();
+      setLoading(false);
+    };
+    loadData();
+  }, [fetchOrders]);
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    await fetchOrders();
+    setLoading(false);
+  };
 
   const filteredOrders = orders.filter(order => {
     const matchesSearch = 
-      order.id.includes(search) || 
-      order.user.includes(search) || 
-      order.restaurant.includes(search);
+      order.id?.includes(search) || 
+      order.user?.includes(search) || 
+      order.restaurant?.includes(search);
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -71,7 +87,7 @@ export default function Orders() {
     delivered: orders.filter(o => o.status === 'delivered').length,
     preparing: orders.filter(o => o.status === 'preparing').length,
     onWay: orders.filter(o => o.status === 'on_way').length,
-    totalRevenue: orders.filter(o => o.status === 'delivered').reduce((acc, o) => acc + o.total, 0),
+    totalRevenue: orders.filter(o => o.status === 'delivered').reduce((acc, o) => acc + (o.total || 0), 0),
   };
 
   return (
@@ -82,10 +98,23 @@ export default function Orders() {
           <h1 className="text-3xl font-bold text-white tracking-tight">الطلبات</h1>
           <p className="text-zinc-500 mt-1">متابعة وإدارة طلبات التوصيل</p>
         </div>
-        <Button variant="outline" className="border-white/10 bg-white/5 hover:bg-white/10" data-testid="export-orders">
-          <Download className="w-4 h-4 ml-2" />
-          تصدير التقرير
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={loading}
+            className="border-white/10 bg-white/5 hover:bg-white/10"
+            data-testid="refresh-orders-btn"
+          >
+            <RefreshCw className={`w-4 h-4 ml-2 ${loading ? 'animate-spin' : ''}`} />
+            تحديث
+          </Button>
+          <Button variant="outline" className="border-white/10 bg-white/5 hover:bg-white/10" data-testid="export-orders">
+            <Download className="w-4 h-4 ml-2" />
+            تصدير التقرير
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -208,46 +237,56 @@ export default function Orders() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="table-header text-right">رقم الطلب</TableHead>
-                <TableHead className="table-header text-right">المستخدم</TableHead>
-                <TableHead className="table-header text-right">المطعم</TableHead>
-                <TableHead className="table-header text-right">العناصر</TableHead>
-                <TableHead className="table-header text-right">التاريخ</TableHead>
-                <TableHead className="table-header text-right">السائق</TableHead>
-                <TableHead className="table-header text-right">المبلغ</TableHead>
-                <TableHead className="table-header text-right">الحالة</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOrders.map((order) => {
-                const StatusIcon = statusIcons[order.status];
-                return (
-                  <TableRow 
-                    key={order.id} 
-                    className="border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
-                    data-testid={`order-row-${order.id}`}
-                  >
-                    <TableCell className="font-mono text-amber-400 font-medium">{order.id}</TableCell>
-                    <TableCell className="text-white">{order.user}</TableCell>
-                    <TableCell className="text-zinc-300">{order.restaurant}</TableCell>
-                    <TableCell className="text-zinc-400">{order.items} عناصر</TableCell>
-                    <TableCell className="text-zinc-500 text-sm">{order.date}</TableCell>
-                    <TableCell className="text-zinc-300">{order.driver}</TableCell>
-                    <TableCell className="text-emerald-400 font-medium">{order.total} ر.س</TableCell>
-                    <TableCell>
-                      <Badge className={`${statusColors[order.status]} border flex items-center gap-1 w-fit`}>
-                        <StatusIcon className="w-3 h-3" />
-                        {statusLabels[order.status]}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+            </div>
+          ) : filteredOrders.length === 0 ? (
+            <div className="text-center py-12 text-zinc-500">
+              لا يوجد طلبات. اضغط على "تحميل بيانات تجريبية" في لوحة التحكم.
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow className="border-white/10 hover:bg-transparent">
+                  <TableHead className="table-header text-right">رقم الطلب</TableHead>
+                  <TableHead className="table-header text-right">المستخدم</TableHead>
+                  <TableHead className="table-header text-right">المطعم</TableHead>
+                  <TableHead className="table-header text-right">العناصر</TableHead>
+                  <TableHead className="table-header text-right">التاريخ</TableHead>
+                  <TableHead className="table-header text-right">السائق</TableHead>
+                  <TableHead className="table-header text-right">المبلغ</TableHead>
+                  <TableHead className="table-header text-right">الحالة</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredOrders.map((order) => {
+                  const StatusIcon = statusIcons[order.status] || ChefHat;
+                  return (
+                    <TableRow 
+                      key={order.id} 
+                      className="border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+                      data-testid={`order-row-${order.id}`}
+                    >
+                      <TableCell className="font-mono text-amber-400 font-medium">{order.id}</TableCell>
+                      <TableCell className="text-white">{order.user}</TableCell>
+                      <TableCell className="text-zinc-300">{order.restaurant}</TableCell>
+                      <TableCell className="text-zinc-400">{order.items} عناصر</TableCell>
+                      <TableCell className="text-zinc-500 text-sm">{order.date}</TableCell>
+                      <TableCell className="text-zinc-300">{order.driver}</TableCell>
+                      <TableCell className="text-emerald-400 font-medium">{order.total} ر.س</TableCell>
+                      <TableCell>
+                        <Badge className={`${statusColors[order.status]} border flex items-center gap-1 w-fit`}>
+                          <StatusIcon className="w-3 h-3" />
+                          {statusLabels[order.status]}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
