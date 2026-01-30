@@ -6,6 +6,13 @@ import { Input } from '../components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../components/ui/dropdown-menu';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useCurrency } from '../context/CurrencyContext';
@@ -16,7 +23,7 @@ import { vehicleTypes, paymentMethods, mockRides } from '../mock/data';
 import { 
   Car, MapPin, Navigation, CreditCard, Star, History, 
   User, LogOut, Languages, Clock, DollarSign, Menu,
-  Phone, MessageSquare, X, ShoppingBag
+  Phone, MessageSquare, X, ShoppingBag, Shield, Settings
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
