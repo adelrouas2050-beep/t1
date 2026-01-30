@@ -1,98 +1,190 @@
-// Mock Data for Transfers Admin Panel
-
-export const mockUsers = [
-  { id: '1', name: 'أحمد محمد', email: 'ahmed@example.com', phone: '+966501234567', status: 'active', rides: 45, orders: 23, joined: '2024-01-15', avatar: 'https://images.unsplash.com/photo-1576558656222-ba66febe3dec?w=100&h=100&fit=crop' },
-  { id: '2', name: 'سارة أحمد', email: 'sara@example.com', phone: '+966502345678', status: 'active', rides: 32, orders: 56, joined: '2024-02-20', avatar: 'https://images.unsplash.com/photo-1655249481446-25d575f1c054?w=100&h=100&fit=crop' },
-  { id: '3', name: 'محمد علي', email: 'mohamed@example.com', phone: '+966503456789', status: 'inactive', rides: 12, orders: 8, joined: '2024-03-10', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
-  { id: '4', name: 'فاطمة حسن', email: 'fatima@example.com', phone: '+966504567890', status: 'active', rides: 67, orders: 89, joined: '2023-12-05', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop' },
-  { id: '5', name: 'خالد العمري', email: 'khaled@example.com', phone: '+966505678901', status: 'blocked', rides: 5, orders: 2, joined: '2024-04-01', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop' },
-];
+// Mock data for TransVerse app
 
 export const mockDrivers = [
-  { id: '1', name: 'عبدالله السعيد', phone: '+966511234567', vehicle: 'Toyota Camry 2023', plate: 'أ ب ج 1234', status: 'online', rating: 4.8, rides: 234, earnings: 15600, verified: true, avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop' },
-  { id: '2', name: 'يوسف الحربي', phone: '+966512345678', vehicle: 'Hyundai Sonata 2022', plate: 'د هـ و 5678', status: 'busy', rating: 4.6, rides: 178, earnings: 12300, verified: true, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop' },
-  { id: '3', name: 'فهد المالكي', phone: '+966513456789', vehicle: 'Kia K5 2024', plate: 'ز ح ط 9012', status: 'offline', rating: 4.9, rides: 456, earnings: 28900, verified: true, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
-  { id: '4', name: 'سعد القحطاني', phone: '+966514567890', vehicle: 'Nissan Altima 2023', plate: 'ي ك ل 3456', status: 'online', rating: 4.4, rides: 89, earnings: 6200, verified: false, avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop' },
-  { id: '5', name: 'ماجد الغامدي', phone: '+966515678901', vehicle: 'Honda Accord 2022', plate: 'م ن س 7890', status: 'online', rating: 4.7, rides: 312, earnings: 21400, verified: true, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop' },
-];
-
-export const mockRestaurants = [
-  { id: '1', name: 'مطعم البيت', category: 'عربي', rating: 4.7, orders: 1234, status: 'open', commission: 15, image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&h=150&fit=crop' },
-  { id: '2', name: 'برجر كينج', category: 'وجبات سريعة', rating: 4.3, orders: 2567, status: 'open', commission: 18, image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200&h=150&fit=crop' },
-  { id: '3', name: 'بيتزا هت', category: 'إيطالي', rating: 4.5, orders: 1890, status: 'closed', commission: 16, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=150&fit=crop' },
-  { id: '4', name: 'سوشي تايم', category: 'ياباني', rating: 4.8, orders: 876, status: 'open', commission: 20, image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&h=150&fit=crop' },
-  { id: '5', name: 'شاورما الريف', category: 'عربي', rating: 4.6, orders: 3421, status: 'open', commission: 12, image: 'https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=200&h=150&fit=crop' },
+  {
+    id: '1',
+    name: 'أحمد محمد',
+    nameEn: 'Ahmed Mohammed',
+    rating: 4.8,
+    vehicle: 'تويوتا كامري 2022',
+    vehicleEn: 'Toyota Camry 2022',
+    plate: 'ABC 1234',
+    phone: '+966501234567',
+    photo: 'https://randomuser.me/api/portraits/men/1.jpg',
+    location: { lat: 24.7136, lng: 46.6753 },
+    available: true
+  },
+  {
+    id: '2',
+    name: 'خالد العتيبي',
+    nameEn: 'Khaled Al-Otaibi',
+    rating: 4.9,
+    vehicle: 'هيونداي النترا 2023',
+    vehicleEn: 'Hyundai Elantra 2023',
+    plate: 'XYZ 5678',
+    phone: '+966507654321',
+    photo: 'https://randomuser.me/api/portraits/men/2.jpg',
+    location: { lat: 24.7236, lng: 46.6853 },
+    available: true
+  }
 ];
 
 export const mockRides = [
-  { id: 'R001', user: 'أحمد محمد', driver: 'عبدالله السعيد', from: 'حي الملز، الرياض', to: 'مطار الملك خالد', status: 'completed', fare: 85, date: '2024-12-15 14:30', duration: '35 دقيقة' },
-  { id: 'R002', user: 'سارة أحمد', driver: 'يوسف الحربي', from: 'حي السليمانية', to: 'جامعة الملك سعود', status: 'in_progress', fare: 45, date: '2024-12-15 15:00', duration: '20 دقيقة' },
-  { id: 'R003', user: 'فاطمة حسن', driver: 'فهد المالكي', from: 'حي النرجس', to: 'مول الرياض جاليري', status: 'pending', fare: 55, date: '2024-12-15 15:15', duration: '25 دقيقة' },
-  { id: 'R004', user: 'محمد علي', driver: 'سعد القحطاني', from: 'حي الياسمين', to: 'مستشفى الملك فيصل', status: 'cancelled', fare: 0, date: '2024-12-15 13:45', duration: '-' },
-  { id: 'R005', user: 'خالد العمري', driver: 'ماجد الغامدي', from: 'حي الورود', to: 'حي العليا', status: 'completed', fare: 35, date: '2024-12-15 12:00', duration: '15 دقيقة' },
+  {
+    id: 'ride1',
+    riderId: 'user1',
+    driverId: '1',
+    driver: mockDrivers[0],
+    pickup: { lat: 24.7136, lng: 46.6753, address: 'شارع الملك فهد، الرياض', addressEn: 'King Fahd Road, Riyadh' },
+    dropoff: { lat: 24.7736, lng: 46.7353, address: 'العليا، الرياض', addressEn: 'Al Olaya, Riyadh' },
+    status: 'completed',
+    price: 45,
+    paymentMethod: 'cash',
+    distance: 12.5,
+    duration: 18,
+    date: '2025-01-15T10:30:00',
+    rating: 5
+  },
+  {
+    id: 'ride2',
+    riderId: 'user1',
+    driverId: '2',
+    driver: mockDrivers[1],
+    pickup: { lat: 24.7736, lng: 46.7353, address: 'العليا، الرياض', addressEn: 'Al Olaya, Riyadh' },
+    dropoff: { lat: 24.6136, lng: 46.6153, address: 'مطار الملك خالد الدولي', addressEn: 'King Khalid International Airport' },
+    status: 'completed',
+    price: 85,
+    paymentMethod: 'points',
+    distance: 35.2,
+    duration: 32,
+    date: '2025-01-10T14:15:00',
+    rating: 4
+  },
+  {
+    id: 'ride3',
+    riderId: 'user1',
+    driverId: '1',
+    driver: mockDrivers[0],
+    pickup: { lat: 24.7136, lng: 46.6753, address: 'حي السفارات، الرياض', addressEn: 'Diplomatic Quarter, Riyadh' },
+    dropoff: { lat: 24.7436, lng: 46.7053, address: 'برج المملكة', addressEn: 'Kingdom Tower' },
+    status: 'completed',
+    price: 35,
+    paymentMethod: 'paypal',
+    distance: 8.3,
+    duration: 12,
+    date: '2025-01-08T09:00:00',
+    rating: 5
+  }
 ];
 
-export const mockOrders = [
-  { id: 'O001', user: 'أحمد محمد', restaurant: 'مطعم البيت', items: 3, total: 125, status: 'delivered', date: '2024-12-15 13:00', driver: 'عبدالله السعيد' },
-  { id: 'O002', user: 'سارة أحمد', restaurant: 'برجر كينج', items: 5, total: 89, status: 'preparing', date: '2024-12-15 14:30', driver: '-' },
-  { id: 'O003', user: 'فاطمة حسن', restaurant: 'سوشي تايم', items: 2, total: 210, status: 'on_way', date: '2024-12-15 14:45', driver: 'يوسف الحربي' },
-  { id: 'O004', user: 'محمد علي', restaurant: 'شاورما الريف', items: 4, total: 65, status: 'cancelled', date: '2024-12-15 12:15', driver: '-' },
-  { id: 'O005', user: 'خالد العمري', restaurant: 'بيتزا هت', items: 1, total: 75, status: 'delivered', date: '2024-12-15 11:30', driver: 'فهد المالكي' },
+export const vehicleTypes = [
+  {
+    id: 'economy',
+    name: 'اقتصادي',
+    nameEn: 'Economy',
+    description: 'خيار مناسب وموفر',
+    descriptionEn: 'Affordable and reliable',
+    pricePerKm: 2.5,
+    basePrice: 10,
+    capacity: 4,
+    icon: 'Car',
+    estimatedTime: '2-5 دقائق'
+  },
+  {
+    id: 'comfort',
+    name: 'مريح',
+    nameEn: 'Comfort',
+    description: 'سيارات أحدث وأكثر راحة',
+    descriptionEn: 'Newer, more comfortable cars',
+    pricePerKm: 3.5,
+    basePrice: 15,
+    capacity: 4,
+    icon: 'Car',
+    estimatedTime: '3-7 دقائق'
+  },
+  {
+    id: 'premium',
+    name: 'فاخر',
+    nameEn: 'Premium',
+    description: 'سيارات فاخرة للتجربة المميزة',
+    descriptionEn: 'Luxury vehicles for premium experience',
+    pricePerKm: 5,
+    basePrice: 25,
+    capacity: 4,
+    icon: 'Car',
+    estimatedTime: '5-10 دقائق'
+  },
+  {
+    id: 'xl',
+    name: 'كبير',
+    nameEn: 'XL',
+    description: 'سيارات واسعة تتسع لـ 6 ركاب',
+    descriptionEn: 'Spacious vehicles for up to 6 passengers',
+    pricePerKm: 4,
+    basePrice: 20,
+    capacity: 6,
+    icon: 'Bus',
+    estimatedTime: '4-8 دقائق'
+  }
 ];
 
-export const mockPromotions = [
-  { id: 'P001', code: 'WELCOME50', discount: 50, type: 'percentage', maxUses: 1000, used: 456, status: 'active', expires: '2025-01-31', service: 'all' },
-  { id: 'P002', code: 'RIDE25', discount: 25, type: 'fixed', maxUses: 500, used: 123, status: 'active', expires: '2025-02-15', service: 'rides' },
-  { id: 'P003', code: 'FOOD15', discount: 15, type: 'percentage', maxUses: 2000, used: 1876, status: 'active', expires: '2025-01-15', service: 'delivery' },
-  { id: 'P004', code: 'VIP100', discount: 100, type: 'fixed', maxUses: 50, used: 50, status: 'expired', expires: '2024-12-01', service: 'all' },
-];
-
-export const mockStats = {
-  totalUsers: 15234,
-  totalDrivers: 892,
-  totalRestaurants: 156,
-  totalRides: 45678,
-  totalOrders: 32456,
-  totalRevenue: 1250000,
-  activeDrivers: 234,
-  pendingOrders: 45,
-  todayRides: 1234,
-  todayOrders: 876,
-  monthlyGrowth: 12.5,
-  averageRating: 4.6,
+export const mockUser = {
+  id: 'user1',
+  name: 'محمد أحمد',
+  nameEn: 'Mohammed Ahmed',
+  email: 'mohammed@example.com',
+  phone: '+966501234567',
+  photo: 'https://randomuser.me/api/portraits/men/10.jpg',
+  points: 250,
+  totalRides: 45,
+  memberSince: '2024-01-01',
+  rating: 4.7
 };
 
-export const mockChartData = {
-  weekly: [
-    { day: 'السبت', rides: 450, orders: 320 },
-    { day: 'الأحد', rides: 520, orders: 410 },
-    { day: 'الإثنين', rides: 380, orders: 290 },
-    { day: 'الثلاثاء', rides: 490, orders: 380 },
-    { day: 'الأربعاء', rides: 560, orders: 450 },
-    { day: 'الخميس', rides: 720, orders: 580 },
-    { day: 'الجمعة', rides: 890, orders: 720 },
-  ],
-  monthly: [
-    { month: 'يناير', revenue: 85000 },
-    { month: 'فبراير', revenue: 92000 },
-    { month: 'مارس', revenue: 78000 },
-    { month: 'أبريل', revenue: 105000 },
-    { month: 'مايو', revenue: 115000 },
-    { month: 'يونيو', revenue: 125000 },
-  ],
-};
+export const paymentMethods = [
+  {
+    id: 'cash',
+    name: 'نقداً',
+    nameEn: 'Cash',
+    icon: 'Banknote',
+    description: 'الدفع نقداً للسائق',
+    descriptionEn: 'Pay cash to driver'
+  },
+  {
+    id: 'points',
+    name: 'نقاط',
+    nameEn: 'Points',
+    icon: 'Star',
+    description: 'استخدم نقاطك المكتسبة',
+    descriptionEn: 'Use your earned points'
+  },
+  {
+    id: 'paypal',
+    name: 'PayPal',
+    nameEn: 'PayPal',
+    icon: 'CreditCard',
+    description: 'الدفع عبر PayPal',
+    descriptionEn: 'Pay with PayPal'
+  }
+];
 
-export const currencies = [
-  { code: 'SAR', name: 'ريال سعودي', symbol: 'ر.س' },
-  { code: 'AED', name: 'درهم إماراتي', symbol: 'د.إ' },
-  { code: 'EGP', name: 'جنيه مصري', symbol: 'ج.م' },
-  { code: 'KWD', name: 'دينار كويتي', symbol: 'د.ك' },
-  { code: 'QAR', name: 'ريال قطري', symbol: 'ر.ق' },
-  { code: 'BHD', name: 'دينار بحريني', symbol: 'د.ب' },
-  { code: 'OMR', name: 'ريال عماني', symbol: 'ر.ع' },
-  { code: 'JOD', name: 'دينار أردني', symbol: 'د.أ' },
-  { code: 'LBP', name: 'ليرة لبنانية', symbol: 'ل.ل' },
-  { code: 'MAD', name: 'درهم مغربي', symbol: 'د.م' },
-  { code: 'TND', name: 'دينار تونسي', symbol: 'د.ت' },
-  { code: 'USD', name: 'دولار أمريكي', symbol: '$' },
+export const promoOffers = [
+  {
+    id: 'promo1',
+    code: 'WELCOME50',
+    discount: 50,
+    type: 'percentage',
+    description: 'خصم 50% على أول رحلة',
+    descriptionEn: '50% off your first ride',
+    validUntil: '2025-12-31'
+  },
+  {
+    id: 'promo2',
+    code: 'SAVE20',
+    discount: 20,
+    type: 'fixed',
+    description: 'خصم 20 ريال',
+    descriptionEn: 'SAR 20 off',
+    validUntil: '2025-06-30'
+  }
 ];
