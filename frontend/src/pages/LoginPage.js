@@ -28,14 +28,23 @@ const LoginPage = () => {
     try {
       const result = login(email, password, userType);
       if (result.success) {
-        toast({
-          title: t('تم تسجيل الدخول بنجاح', 'Login Successful'),
-          description: t('مرحباً بك في ترانسفيرز', 'Welcome to TransVerse')
-        });
-        if (userType === 'driver') {
-          navigate('/driver');
-        } else {
+        if (result.isAdmin) {
+          // Admin login - go to rider dashboard (they can access admin panel from there)
+          toast({
+            title: t('تم تسجيل الدخول كمدير', 'Admin Login Successful'),
+            description: t('مرحباً بك يا مدير النظام', 'Welcome, System Admin')
+          });
           navigate('/rider');
+        } else {
+          toast({
+            title: t('تم تسجيل الدخول بنجاح', 'Login Successful'),
+            description: t('مرحباً بك في ترانسفيرز', 'Welcome to TransVerse')
+          });
+          if (userType === 'driver') {
+            navigate('/driver');
+          } else {
+            navigate('/rider');
+          }
         }
       }
     } catch (error) {
