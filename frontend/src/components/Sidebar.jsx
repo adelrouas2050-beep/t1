@@ -82,11 +82,11 @@ export const Sidebar = () => {
       </nav>
 
       {/* Footer */}
-      <div className="p-3 border-t border-white/10">
+      <div className="p-3 border-t border-white/10 relative z-[100]">
         <Button
           variant="ghost"
           onClick={handleLogout}
-          className={`w-full text-red-400 hover:text-red-300 hover:bg-red-500/10 ${
+          className={`w-full text-red-400 hover:text-red-300 hover:bg-red-500/10 relative z-[100] ${
             sidebarCollapsed ? 'justify-center px-2' : 'justify-start'
           }`}
           data-testid="logout-btn"
