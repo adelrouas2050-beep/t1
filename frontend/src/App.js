@@ -63,8 +63,8 @@ function AppRoutes() {
         <Route path="settings" element={<Settings />} />
       </Route>
       
-      {/* Redirect root to login */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      /* Redirect root to home */}
+      <Route path="/home" element={<Navigate to="/" replace />} />
       
       {/* 404 - Redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
