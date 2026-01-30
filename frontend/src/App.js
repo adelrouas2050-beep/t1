@@ -63,7 +63,7 @@ function AppRoutes() {
         <Route path="settings" element={<Settings />} />
       </Route>
       
-      /* Redirect root to home */}
+      {/* Redirect /home to root */}
       <Route path="/home" element={<Navigate to="/" replace />} />
       
       {/* 404 - Redirect to home */}
