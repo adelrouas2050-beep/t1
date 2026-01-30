@@ -6,13 +6,6 @@ import { Input } from '../components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../components/ui/dropdown-menu';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useCurrency } from '../context/CurrencyContext';
@@ -23,13 +16,13 @@ import { vehicleTypes, paymentMethods, mockRides } from '../mock/data';
 import { 
   Car, MapPin, Navigation, CreditCard, Star, History, 
   User, LogOut, Languages, Clock, DollarSign, Menu,
-  Phone, MessageSquare, X, ShoppingBag, Shield, Settings
+  Phone, MessageSquare, X, ShoppingBag
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
 const RiderDashboard = () => {
   const navigate = useNavigate();
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout } = useAuth();
   const { t, toggleLanguage, language } = useLanguage();
   const { formatPrice } = useCurrency();
   const { toast } = useToast();
@@ -53,13 +46,6 @@ const RiderDashboard = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
-  };
-
-  const handleGoToAdmin = () => {
-    // Set admin token for admin panel
-    localStorage.setItem('token', 'admin-token');
-    localStorage.setItem('admin', JSON.stringify({ name: 'مدير النظام', email: 'admin@transfers.com', role: 'super_admin' }));
-    navigate('/admin');
   };
 
   const unreadMessagesCount = getTotalUnreadCount();
@@ -149,33 +135,9 @@ const RiderDashboard = () => {
               <Button variant="ghost" size="sm" onClick={toggleLanguage}>
                 <Languages className="w-4 h-4" />
               </Button>
-              
-              {/* Admin Menu or Regular Logout */}
-              {isAdmin ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2 border-amber-500 text-amber-600 hover:bg-amber-50">
-                      <Shield className="w-4 h-4" />
-                      <span className="hidden sm:inline">{t('المدير', 'Admin')}</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem onClick={handleGoToAdmin} className="gap-2 cursor-pointer">
-                      <Settings className="w-4 h-4" />
-                      {t('لوحة التحكم', 'Admin Panel')}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="gap-2 cursor-pointer text-red-600">
-                      <LogOut className="w-4 h-4" />
-                      {t('تسجيل الخروج', 'Logout')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button variant="ghost" size="sm" onClick={handleLogout}>
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              )}
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
