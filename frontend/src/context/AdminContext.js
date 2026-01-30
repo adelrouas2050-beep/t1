@@ -69,10 +69,15 @@ export const AdminProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const savedAdmin = localStorage.getItem('admin');
+    const isAdminUser = localStorage.getItem('isAdmin');
     
     if (token && savedAdmin) {
       setIsAuthenticated(true);
       setAdmin(JSON.parse(savedAdmin));
+    } else if (isAdminUser === 'true') {
+      // User logged in as admin from main app
+      setIsAuthenticated(true);
+      setAdmin({ name: 'مدير النظام', email: 'admin@transfers.com', role: 'super_admin' });
     }
     setLoading(false);
   }, []);
